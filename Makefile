@@ -4,6 +4,8 @@ PATCHLEVEL = 19
 SUBLEVEL = 325
 EXTRAVERSION =
 NAME = "People's Front"
+LOCALVERSION ?=
+export LOCALVERSION
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
