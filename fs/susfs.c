@@ -1,4 +1,5 @@
 #include <linux/version.h>
+#include <linux/init.h>
 #include <linux/cred.h>
 #include <linux/fs.h>
 #include <linux/slab.h>
@@ -764,6 +765,22 @@ void susfs_spoof_uname(struct new_utsname* tmp) {
 		strscpy(tmp->version, my_uname.version, __NEW_UTS_LEN);
 	} while (read_seqretry(&susfs_uname_seqlock, seq));
 }
+
+static int __init susfs_uname_spoof_init(void) {
+	struct new_utsname *u = utsname();
+
+	write_seqlock(&susfs_uname_seqlock);
+	strscpy(my_uname.release, "6.12.30-AlisaMikhailovna", __NEW_UTS_LEN);
+	strscpy(my_uname.version, u->version, __NEW_UTS_LEN);
+	write_sequnlock(&susfs_uname_seqlock);
+
+	static_branch_enable(&susfs_is_uname_spoof_buffer_set);
+
+	SUSFS_LOGI("default spoofed release: '%s'\n", my_uname.release);
+
+	return 0;
+}
+late_initcall(susfs_uname_spoof_init);
 #endif // #ifdef CONFIG_KSU_SUSFS_SPOOF_UNAME
 
 /* enable_log */
