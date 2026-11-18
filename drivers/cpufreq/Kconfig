@@ -120,6 +120,17 @@ config CPU_FREQ_GOV_PERFORMANCE
 
 	  If in doubt, say Y.
 
+config CPU_FREQ_GOV_PERFORMANCE_LOCK
+	bool "Prevent switching away from the performance governor"
+	depends on CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Refuse requests from user space to replace the performance
+	  governor with a different one. This keeps every CPU policy at
+	  its maximum frequency even when vendor init scripts or power
+	  management daemons try to select another governor at boot.
+
+	  If unsure, say N.
+
 config CPU_FREQ_GOV_POWERSAVE
 	tristate "'powersave' governor"
 	help

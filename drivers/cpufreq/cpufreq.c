@@ -782,6 +782,13 @@ static ssize_t store_scaling_governor(struct cpufreq_policy *policy,
 	if (ret != 1)
 		return -EINVAL;
 
+#ifdef CONFIG_CPU_FREQ_GOV_PERFORMANCE_LOCK
+	if (strcmp(str_governor, "performance")) {
+		pr_info("cpufreq: governor is locked to performance\n");
+		return -EPERM;
+	}
+#endif
+
 	if (cpufreq_driver->setpolicy) {
 		unsigned int new_pol;
 
